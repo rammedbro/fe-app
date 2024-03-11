@@ -1,0 +1,65 @@
+{
+  "name": "@imolater/fe-app-codegen",
+  "version": "0.0.0",
+  "description": "Logic for unfolding frontend applications",
+  "author": "imolater",
+  "license": "ISC",
+  "engines": {
+    "node": ">=14.19.0"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./cli": {
+      "import": "./dist/cli.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "cli": [
+        "dist/cli.d.ts"
+      ]
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "fe-app-codegen": "./dist/bin.js"
+  },
+  "scripts": {
+    "build": "rollup -c rollup.config.js",
+    "lint": "eslint **/*.ts",
+    "lint:types": "tsc --noEmit",
+    "docs": "typedoc src/index.ts"
+  },
+  "dependencies": {
+    "commander": "^9.5.0",
+    "consola": "^3.2.3",
+    "inquirer": "^9.1.4"
+  },
+  "devDependencies": {
+    "@fe-app/eslint-config-base": "workspace:0.0.0",
+    "@fe-app/lint-staged-config": "workspace:0.0.0",
+    "@fe-app/rollup-config": "workspace:0.0.0",
+    "@fe-app/tsconfig": "workspace:0.0.0",
+    "@fe-app/typedoc-config": "workspace:0.0.0",
+    "@types/inquirer": "^9.0.3",
+    "type-fest": "^4.11.1"
+  },
+  "peerDependencies": {
+    "@commitlint/cli": "^17.8.1",
+    "@commitlint/config-conventional": "^17.8.1",
+    "@imolater/fe-app-scripts": "^0.0.0",
+    "eslint": "^8.57.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^15.2.2",
+    "stylelint": "^16.2.1",
+    "stylelint-config-recommended": "^14.0.0"
+  }
+}

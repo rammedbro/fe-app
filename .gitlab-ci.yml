@@ -1,13 +1,197 @@
-# You can override the included template(s) by including variable overrides
-# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
-# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
-# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
-# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
-# Note that environment variables can be set in several places
-# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
+variables:
+  REGISTRY_DOMAIN: ${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm
+  REGISTRY_URL: https://${REGISTRY_DOMAIN}
+  REGISTRY_SCOPE: $CI_PROJECT_ROOT_NAMESPACE
+  NODE_IMAGE: ${CI_REGISTRY_IMAGE}/node-20:latest
+
 stages:
-- test
+  - install
+  - build
+  - check
+  - test
+  - release
+
+include:
+  - template: Security/SAST.gitlab-ci.yml
+
+default:
+  image: ${NODE_IMAGE}
+
+.node-modules-cache:
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store
+    policy: pull
+  before_script:
+    - echo -e "\e[0Ksection_start:`date +%s`:npm_install[collapsed=true]\r\e[0KInstalling dependencies"
+    - pnpm config set store-dir .pnpm-store
+    - pnpm install --prefer-offline
+    - echo -e "\e[0Ksection_end:`date +%s`:npm_install\r\e[0K"
+
+install:
+  stage: install
+  extends:
+    - .node-modules-cache
+  except:
+    - tags
+    - merge_requests
+  tags:
+    - imolater-mac-runner
+  cache:
+    policy: pull-push
+  script:
+    - echo "This is a stub message"
+
+build:
+  stage: build
+  extends:
+    - .node-modules-cache
+  except:
+    - tags
+    - merge_requests
+  tags:
+    - imolater-mac-runner
+  script:
+    - pnpm build
+  artifacts:
+    paths:
+      - packages/**/dist
+      - configs/**/dist
+
+lint:
+  stage: check
+  extends:
+    - .node-modules-cache
+  needs:
+    - build
+  except:
+    - tags
+    - merge_requests
+  script:
+    - pnpm lint
+
+lint:types:
+  stage: check
+  extends:
+    - .node-modules-cache
+  needs:
+    - build
+  except:
+    - tags
+    - merge_requests
+  script:
+    - pnpm lint:types
+
+test:
+  stage: test
+  extends:
+    - .node-modules-cache
+  needs:
+    - build
+  except:
+    - tags
+    - merge_requests
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - ./**/junit.xml
+  script:
+    - pnpm lerna run test --stream -- --coverage --reporters default --reporters jest-junit
+
 sast:
   stage: test
-include:
-- template: Security/SAST.gitlab-ci.yml
+
+.gitlab-auth:
+  before_script:
+    - echo -e "\e[0Ksection_start:`date +%s`:gitlab_auth[collapsed=true]\r\e[0KGitlab authentication"
+    - git config --global user.name $GITLAB_USER_NAME
+    - git config --global user.email $GITLAB_USER_EMAIL
+    - git remote set-url origin "https://gitlab-ci-token:${GITLAB_ACCESS_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git/"
+    - echo -e "\e[0Ksection_end:`date +%s`:gitlab_auth\r\e[0K"
+
+.npm-auth:
+  after_script:
+    - echo -e "\e[0Ksection_start:`date +%s`:npm_auth[collapsed=true]\r\e[0KNPM authentication"
+    - npm set @${REGISTRY_SCOPE}:registry=${REGISTRY_URL}
+    - npm set "//${REGISTRY_DOMAIN}/:_authToken=${CI_JOB_TOKEN}"
+    - echo -e "\e[0Ksection_end:`date +%s`:npm_auth\r\e[0K"
+
+.git:
+  before_script:
+    - echo -e "\e[0Ksection_start:`date +%s`:git_reset_state[collapsed=true]\r\e[0KResetting current branch state"
+    - git checkout $CI_COMMIT_BRANCH
+    - git reset --hard origin/$CI_COMMIT_BRANCH
+    - echo -e "\e[0Ksection_end:`date +%s`:git_reset_state\r\e[0K"
+  after_script:
+    - echo -e "\e[0Ksection_start:`date +%s`:git_update_stage[collapsed=true]\r\e[0KUpdating stage branch"
+    - git checkout stage
+    - git pull --ff origin master
+    - git push origin stage --no-verify
+    - echo -e "\e[0Ksection_end:`date +%s`:git_update_stage\r\e[0K"
+
+.lerna:
+  after_script:
+    - !reference [ .npm-auth, after_script ]
+    - pnpm lerna publish from-git
+
+.release:
+  stage: release
+  when: manual
+  extends:
+    - .node-modules-cache
+  needs:
+    - build
+  before_script:
+    - !reference [ .git, before_script ]
+    - !reference [ .node-modules-cache, before_script ]
+    - !reference [ .gitlab-auth, before_script ]
+
+release:
+  extends:
+    - .release
+  only:
+    - master
+  variables:
+    GL_TOKEN: $CI_JOB_TOKEN
+    GL_API_URL: $CI_API_V4_URL
+    GL_PROJECT_ID: $CI_PROJECT_ID
+  script:
+    - pnpm lerna version --conventional-graduate --create-release gitlab
+  after_script:
+    - !reference [ .lerna, after_script ]
+    - !reference [ .git, after_script ]
+
+release:stage:
+  extends:
+    - .release
+  only:
+    - stage
+  script:
+    - pnpm lerna version --conventional-prerelease --preid "next" --no-changelog
+  after_script:
+    - !reference [ .lerna, after_script ]
+
+release:dev:
+  extends:
+    - .release
+  except:
+    - tags
+    - merge_requests
+    - master
+    - stage
+  script:
+    - >
+      pnpm lerna version \
+        --conventional-prerelease \
+        --preid $(node .gitlab/scripts/get-release-dev-preid.js) \
+        --no-push \
+        --no-changelog \
+        --no-git-tag-version
+  after_script:
+    - git add . && git commit --message "Release:fe-app" --no-verify
+    - !reference [ .npm-auth, after_script ]
+    - pnpm lerna publish from-package

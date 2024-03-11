@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "name": "@fe-app/eslint-config-base",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsup src/index.ts"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.56.5",
+    "@fe-app/tsconfig": "workspace:0.0.0"
+  }
+}

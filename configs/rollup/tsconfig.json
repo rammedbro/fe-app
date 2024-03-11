@@ -1,0 +1,9 @@
+{
+  "extends": "@fe-app/tsconfig/tsconfig.json",
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

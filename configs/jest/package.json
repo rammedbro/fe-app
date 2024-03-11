@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "name": "@fe-app/jest-config",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --dts"
+  },
+  "dependencies": {
+    "jest": "^29.7.0",
+    "jest-junit": "^16.0.0",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@fe-app/tsconfig": "workspace:0.0.0",
+    "@types/jest": "^29.5.11"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "extends": "@fe-app/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "CommonJS"
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

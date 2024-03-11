@@ -1,0 +1,31 @@
+{
+  "private": true,
+  "name": "@fe-app/rollup-config",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "import": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts"
+  },
+  "dependencies": {
+    "@rollup/plugin-replace": "^5.0.5",
+    "@rollup/plugin-typescript": "^11.1.5",
+    "lodash.mergewith": "^4.6.2",
+    "rollup": "^4.9.0",
+    "rollup-plugin-cleanup": "^3.2.1",
+    "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-tsconfig-paths": "^1.5.2"
+  },
+  "devDependencies": {
+    "@fe-app/tsconfig": "workspace:0.0.0",
+    "@types/lodash.mergewith": "^4.6.9",
+    "type-fest": "^4.12.0"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "name": "@fe-app/lint-staged-config",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "import": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts"
+  },
+  "dependencies": {
+    "lint-staged": "^15.2.0"
+  },
+  "devDependencies": {
+    "@fe-app/tsconfig": "workspace:0.0.0"
+  }
+}
