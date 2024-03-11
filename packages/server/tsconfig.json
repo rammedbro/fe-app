@@ -1,0 +1,24 @@
+{
+  "extends": "@fe-app/tsconfig",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@imolater/fe-app-server": [
+        "src/index.ts"
+      ],
+      "@imolater/fe-app-server/cli": [
+        "src/cli/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "jest.config.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

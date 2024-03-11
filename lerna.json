@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "npmClient": "pnpm",
+  "version": "independent",
+  "loglevel": "error",
+  "command": {
+    "version": {
+      "yes": true,
+      "private": false,
+      "exact": true,
+      "commitHooks": false,
+      "conventionalCommits": true,
+      "message": "Release: fe-app"
+    },
+    "publish": {
+      "yes": true
+    },
+    "clean": {
+      "yes": true
+    }
+  }
+}

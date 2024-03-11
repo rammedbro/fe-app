@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "name": "@fe-app/tsconfig",
+  "version": "0.0.0",
+  "dependencies": {
+    "@types/node": "^20.6.1",
+    "typescript": "^4.7.4"
+  }
+}

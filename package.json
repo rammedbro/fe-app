@@ -1,0 +1,30 @@
+{
+  "private": true,
+  "repository": "https://gitlab.com/imolater/fe-app.git",
+  "packageManager": "pnpm@8.7.5",
+  "scripts": {
+    "prepare": "husky install",
+    "build": "lerna run build",
+    "lint": "eslint ./ --ext .js,.ts",
+    "lint:types": "lerna run lint:types",
+    "test": "lerna run test",
+    "docs": "lerna run docs",
+    "clean:dist": "rimraf ./**/dist",
+    "clean:modules": "rimraf ./**/node_modules"
+  },
+  "dependencies": {
+    "@fe-app/eslint-config-base": "workspace:0.0.0",
+    "@fe-app/lint-staged-config": "workspace:0.0.0",
+    "@fe-app/conventional-commits": "workspace:0.0.0",
+    "@imolater/fe-app-scripts": "workspace:^",
+    "husky": "^7.0.4",
+    "lerna": "7.3.0",
+    "rimraf": "^3.0.2",
+    "tsup": "^6.5.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "lerna@7.3.0": "patches/lerna@7.3.0.patch"
+    }
+  }
+}

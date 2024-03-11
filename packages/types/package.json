@@ -1,0 +1,44 @@
+{
+  "name": "@imolater/fe-app-types",
+  "version": "0.0.0",
+  "description": "Types for frontend applications",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.x5food.tech/npm/x5digital/fe-app.git"
+  },
+  "keywords": [
+    "types"
+  ],
+  "author": "imolater",
+  "license": "ISC",
+  "engines": {
+    "node": ">=14.19.0"
+  },
+  "type": "module",
+  "exports": {
+    "import": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c rollup.config.js",
+    "lint": "eslint **/*.ts",
+    "lint:types": "tsc --noEmit",
+    "docs": "typedoc src/index.ts"
+  },
+  "dependencies": {
+    "@types/express": "^4.17.21",
+    "socket.io": "^4.7.4"
+  },
+  "devDependencies": {
+    "@fe-app/eslint-config-base": "workspace:0.0.0",
+    "@fe-app/lint-staged-config": "workspace:0.0.0",
+    "@fe-app/rollup-config": "workspace:0.0.0",
+    "@fe-app/tsconfig": "workspace:0.0.0",
+    "@fe-app/typedoc-config": "workspace:0.0.0"
+  }
+}

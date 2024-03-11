@@ -1,0 +1,60 @@
+{
+  "name": "@imolater/fe-app-scripts",
+  "version": "0.0.0",
+  "description": "Useful scripts for frontend applications",
+  "author": "imolater",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.x5food.tech/npm/x5digital/fe-app.git"
+  },
+  "engines": {
+    "node": ">=14.19.0"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./cli": {
+      "import": "./dist/cli.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "cli": [
+        "dist/cli.d.ts"
+      ]
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "fe-app-scripts": "./dist/bin.js"
+  },
+  "scripts": {
+    "build": "rollup -c rollup.config.js",
+    "lint": "eslint **/*.ts",
+    "lint:types": "tsc --noEmit",
+    "docs": "typedoc src/index.ts"
+  },
+  "dependencies": {
+    "commander": "^9.5.0",
+    "consola": "^3.2.3"
+  },
+  "devDependencies": {
+    "@fe-app/eslint-config-base": "workspace:0.0.0",
+    "@fe-app/lint-staged-config": "workspace:0.0.0",
+    "@fe-app/rollup-config": "workspace:0.0.0",
+    "@fe-app/tsconfig": "workspace:0.0.0",
+    "@fe-app/typedoc-config": "workspace:0.0.0",
+    "type-fest": "^4.11.1"
+  },
+  "peerDependencies": {
+    "vue-tsc": "*"
+  }
+}
