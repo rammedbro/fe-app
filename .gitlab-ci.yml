@@ -155,12 +155,14 @@ release:
     - .release
   only:
     - master
+  tags:
+    - imolater-mac-runner
   variables:
     GL_TOKEN: $CI_JOB_TOKEN
     GL_API_URL: $CI_API_V4_URL
     GL_PROJECT_ID: $CI_PROJECT_ID
   script:
-    - pnpm lerna version --conventional-graduate --create-release gitlab
+    - pnpm lerna version --create-release gitlab #--conventional-graduate Enable for stage
   after_script:
     - !reference [ .lerna, after_script ]
     - !reference [ .git, after_script ]
