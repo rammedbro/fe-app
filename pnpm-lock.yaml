@@ -326,7 +326,7 @@ importers:
         specifier: ^17.8.1
         version: 17.8.1
       '@imolater/fe-app-scripts':
-        specifier: ^0.0.0
+        specifier: <=1.0.0
         version: link:../scripts
       commander:
         specifier: ^9.5.0
