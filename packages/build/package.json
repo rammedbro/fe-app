@@ -1,6 +1,6 @@
 {
   "name": "@imolater/fe-app-build",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Building logic for frontend applications",
   "author": "imolater",
   "license": "ISC",
@@ -44,9 +44,9 @@
     "docs": "typedoc src/index.ts"
   },
   "dependencies": {
+    "@imolater/fe-app-types": "0.1.0",
+    "@imolater/fe-app-workers": "0.1.0",
     "@sentry/vite-plugin": "^2.8.0",
-    "@imolater/fe-app-types": "0.0.0",
-    "@imolater/fe-app-workers": "0.0.0",
     "commander": "^9.5.0",
     "consola": "^3.2.3",
     "esbuild": "^0.19.11",

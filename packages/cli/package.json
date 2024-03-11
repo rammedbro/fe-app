@@ -1,6 +1,6 @@
 {
   "name": "@imolater/fe-app-cli",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Command line interface for frontend application framework",
   "author": "imolater",
   "license": "ISC",
@@ -31,11 +31,11 @@
     "url": "https://gitlab.x5food.tech/npm/x5digital/fe-app.git"
   },
   "dependencies": {
-    "@imolater/fe-app-build": "0.0.0",
-    "@imolater/fe-app-codegen": "0.0.0",
-    "@imolater/fe-app-scripts": "0.0.0",
-    "@imolater/fe-app-server": "0.0.0",
-    "@imolater/fe-app-types": "0.0.0",
+    "@imolater/fe-app-build": "0.1.0",
+    "@imolater/fe-app-codegen": "0.1.0",
+    "@imolater/fe-app-scripts": "0.1.0",
+    "@imolater/fe-app-server": "0.1.0",
+    "@imolater/fe-app-types": "0.1.0",
     "commander": "^9.4.1",
     "consola": "^3.2.3"
   },
