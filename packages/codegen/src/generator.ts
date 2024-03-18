@@ -12,7 +12,9 @@ export class CodeGenerator {
   };
 
   constructor() {
-    fs.rmSync(this.paths.husky, { recursive: true });
+    if (fs.existsSync(this.paths.husky)) {
+      fs.rmSync(this.paths.husky, { recursive: true });
+    }
     husky.install(this.paths.husky);
     this.addPackageScript('prepare', 'husky install');
 

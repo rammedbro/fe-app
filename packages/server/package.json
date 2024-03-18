@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@imolater/fe-app-build": "0.1.0",
+    "@imolater/fe-app-config": "0.0.0",
     "@imolater/fe-app-types": "0.1.0",
     "@sentry/cli": "^2.20.5",
     "commander": "^9.4.1",

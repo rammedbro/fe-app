@@ -6,6 +6,10 @@ export const generateStylelint: CodegenFn = (generator) => {
     extends: [
       'stylelint-config-recommended',
     ],
+    ignoreFiles: [
+      'node_modules',
+      'build',
+    ],
   };
   const pattern = '*.{css,scss}';
 

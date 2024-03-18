@@ -2,7 +2,6 @@ import { basename, extname } from 'node:path';
 import type { Configs } from '@imolater/fe-app-types';
 import { deepmerge } from './merge';
 
-export { getConfig } from './config';
 export { loadModule } from './module';
 export { deepmerge } from './merge';
 

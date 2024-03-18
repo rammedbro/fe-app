@@ -1,71 +1,83 @@
 import inspector from 'node:inspector';
 import express from 'express';
-import consola from 'consola';
 import { loadModule } from '@imolater/fe-app-build';
-import type { Configs, Logger, server } from '@imolater/fe-app-types';
+import type { Config } from '@imolater/fe-app-config';
+import type { Configs, Logger } from '@imolater/fe-app-types';
+import type http from 'node:http';
 
-export function getApplication(
-  config: server.Config,
-  logger: Logger,
-  configs: Configs = {},
-) {
-  const app = createApplication(config);
+// type SocketEventHandler = (event: string, data: object, socket: socket.Socket) => void;
+type Express = Omit<express.Express, 'listen'>;
 
-  if (configs.serverConfig) {
-    const serverConfig = loadModule<server.ServerConfig>(configs.serverConfig, { compile: true });
-
-    serverConfig(app);
-  }
-
-  // Подписываемся на события сервера
-  app.extendServer(server => {
-    server.on('listening', () => {
-      consola.success(`Http server is listening on ${ server.address() }`);
-    });
-    server.on('error', (e) =>
-      logger.error({
-        name: 'Server Error',
-        data: {
-          code: '500',
-          message: (e as Error).message,
-          error: e,
-        },
-      }),
-    );
-    server.on('close', () =>
-      consola.success('Http server is shutdown'),
-    );
-  });
-
-  if (config.inspector.enable) {
-    app.extendServer(() => {
-      const port = config.docker() ? 8090 : config.inspector.port as number;
-
-      inspector.open(port, '0.0.0.0');
-      consola.success(`Inspector is listening on ${ inspector.url() }`);
-    });
-  }
-
-  return app;
+/**
+ * Модифицированный express сервер
+ */
+interface Application extends Express {
+  /**
+   * Модифицированный метод listen, принимающий только callback
+   *
+   * @param {() => void} callback
+   * @returns {Server}
+   */
+  listen: (callback?: () => void) => Server;
+  /**
+   * Модификация инстанса сервера получаемого при вызове метода listen у инстанса express приложения
+   *
+   * @param {(server: Server) => void} extend
+   */
+  extendServer: (extend: (server: Server) => void) => void;
+  // /**
+  //  * Проксирование запросов к модулю
+  //  *
+  //  * @param {string} module - Название модуля
+  //  * @param {Record<string, RequestHandler>} routes - Проксируемые роуты модуля
+  //  * @param {{protocol?: string}} options - Опции
+  //  */
+  // useRequestProxy: (
+  //   routes: Record<string, express.RequestHandler>,
+  //   options?: {
+  //     /** Протокол по которому выполняется подключение к оригинальному адресу модуля */
+  //     protocol?: string;
+  //   },
+  // ) => void;
+  // /**
+  //  * Проксирование websocket событий модуля
+  //  *
+  //  * @param {string} module - Название модуля
+  //  * @param {Record<string, SocketEventHandler>} events - Проксируемые события модуля
+  //  * @param {{path?: string}} options - Опции
+  //  */
+  // useSocketProxy: (
+  //   events: Record<string, SocketEventHandler>,
+  //   options?: {
+  //     /** Протокол по которому выполняется подключение к оригинальному адресу модуля */
+  //     protocol?: string;
+  //     /** Путь по которому слушает websocket сервер */
+  //     path?: string;
+  //   },
+  // ) => void;
 }
 
 /**
- * Создание инстанса express приложения
- *
- * @param {AmConfig} config
- * @returns {ExpressApp}
+ * Интерфейс объекта сервера
  */
-function createApplication(config: server.Config) {
-  // TODO: Переделать способ задания объекта app(e.g. Object.create)
-  const app = express() as unknown as server.Application;
+interface Server extends http.Server {
+  /** Получение адреса сервера */
+  address: () => string;
+}
+
+type ServerConfig = (app: Application) => void;
+
+// TODO: Сделать свою абстракцию над express app
+export function getApplication(
+  config: Config,
+  logger: Logger,
+  configs: Configs = {},
+) {
+  const app = express() as unknown as Application;
 
   /**
-   * Подключаем парсер для доступа к телу запроса
-   */
-  app.use(express.json());
-
-  /**
-   * Добавляем методы
+   *
+   * @param extend
    */
   app.extendServer = (extend) => {
     const listen = app.listen;
@@ -78,8 +90,9 @@ function createApplication(config: server.Config) {
       return server;
     };
   };
+
   // TODO: Реализовать прокси к http запросам
-  // app.addModuleRequestProxy = (module, routes, options) => {
+  // addModuleRequestProxy(module, routes, options) {
   //   if (!modules.has(module)) {
   //     throw new Error(`Модуль ${ module } не найден в списке модулей`);
   //   }
@@ -105,10 +118,10 @@ function createApplication(config: server.Config) {
   //       res.redirect(307, url.toString());
   //     }
   //   });
-  // };
+  // },
 
   // TODO: Реализовать прокси к socket соединениям
-  // app.addModuleSocketProxy = (module, events, options) => {
+  // addModuleSocketProxy(module, events, options) {
   //   if (!modules.has(module)) {
   //     throw new Error(`Модуль ${ module } не найден в списке модулей`);
   //   }
@@ -154,24 +167,63 @@ function createApplication(config: server.Config) {
   //       });
   //     });
   //   });
-  // };
+  // },
+
+  /**
+   * Подключаем парсер для доступа к телу запроса
+   */
+  app.use(express.json());
 
   /**
    * Модифицируем приложение
    */
-  // Привязываем хост и порт
-  const port = config.docker() ? 8080 : config.host.port as number;
+  const port = config.docker() ? 8080 : config.get('host.port') as number;
   const listen = (app.listen as express.Express['listen']).bind(app);
-  app.listen = (callback) => listen(port, '0.0.0.0', callback) as server.Server;
+  app.listen = (callback) => listen(port, '0.0.0.0', callback) as Server;
+
+  /**
+   * Подключаем middlewares пользователя
+   */
+  if (configs.serverConfig) {
+    const serverConfig = loadModule<ServerConfig>(configs.serverConfig, { compile: true });
+
+    serverConfig(app);
+  }
 
   /**
    * Модифицируем сервер
    */
-  app.extendServer((server) => {
-    // Унифицируем ответ метода address
+  app.extendServer(server => {
+    /** Унифицируем ответ метода address */
     server.address = () => `http://localhost:${ port }`;
+
+    /**
+     * Подписываемся на события сервера
+     */
+    server.on('listening', () => {
+      logger.info({ data: `Http server is listening on ${ server.address() }` });
+    });
+    server.on('error', (e) =>
+      logger.error({
+        name: 'Server Error',
+        data: {
+          code: '500',
+          message: (e as Error).message,
+          error: e,
+        },
+      }),
+    );
+    server.on('close', () =>
+      logger.info({ data: 'Http server is shutdown' }),
+    );
+
+    if (config.get('inspector.enable')) {
+      const port = config.docker() ? 8090 : config.get('inspector.port') as number;
+
+      inspector.open(port, '0.0.0.0');
+      logger.info({ data: `Inspector is listening on ${ inspector.url() }` });
+    }
   });
 
   return app;
 }
-

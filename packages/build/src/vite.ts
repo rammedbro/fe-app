@@ -1,25 +1,61 @@
 import path from 'node:path';
 import process from 'node:process';
-import { loadConfigFromFile, mergeConfig, type LibraryOptions } from 'vite';
+import { loadConfigFromFile, mergeConfig } from 'vite';
 import mime from 'mime-types';
 import lodashMerge from 'lodash.merge';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import type { InlineConfig, LibraryOptions, PluginOption, UserConfig, BuildOptions } from 'vite';
 import type { UnimportPluginOptions } from 'unimport/unplugin';
-import type { FEAppConfig, ViteMode, Configs, client } from '@imolater/fe-app-types';
+import type { FEAppConfig, Configs } from '@imolater/fe-app-types';
 import { generateBuildMeta, generateManifest, insertConfig, insertFavicon, insertGlobalVariable } from '@/plugins';
-import { loadModule, getConfig, mapObjectValues, deepmerge } from '@/utils';
-import type { ViteConfig } from '@/types';
+import { loadModule, mapObjectValues, deepmerge } from '@/utils';
+import type { Config, ConfigJson } from '@imolater/fe-app-config';
+
+/** В каком режиме запущен vite - сборщик/сервер */
+export type ViteMode = 'production' | 'development';
+
+/** Основной vite конфиг */
+export type ViteConfig = InlineConfig & {
+  mode: ViteMode;
+  build: {
+    outDir: string;
+    assetsDir: string;
+    /** Дополнительные конфиги для сборки в рамках одного конфига */
+    libConfigs: ViteLibConfig[];
+    /** Метаданные сборки */
+    meta: {
+      /** Пути до собираемых конфигов после сборки */
+      configs: Configs;
+    };
+  };
+  plugins: PluginOption[];
+  resolve: {
+    alias: Record<string, string>;
+  };
+};
+
+/** Интерфейс конфига сборки библиотек */
+interface ViteLibConfig extends UserConfig {
+  build: ViteLibBuildOptions;
+}
+
+interface ViteLibBuildOptions extends BuildOptions {
+  outDir: string;
+  lib: LibraryOptions;
+}
 
 /**
  * Получение vite конфига
  *
  * @param {ViteMode} mode - режим работы vite
+ * @param config
  * @param {Configs} configs - опции для указания путей до конфиг файлов
  * @returns {Promise<ViteConfig>}
  */
 export async function getViteConfig(
   mode: ViteMode,
+  config: Config,
   configs: Configs = {},
 ): Promise<ViteConfig> {
   const cwd = process.cwd();
@@ -178,8 +214,8 @@ export async function getViteConfig(
         }),
       });
     } else {
-      const clientConfig = loadModule<client.ClientConfig>(configs.clientConfig, { compile: true });
-      viteConfig.plugins.push(insertConfig(clientConfig(getConfig())));
+      const clientConfig = loadModule<(config: Config) => ConfigJson>(configs.clientConfig, { compile: true });
+      viteConfig.plugins.push(insertConfig(clientConfig(config)));
     }
   }
 

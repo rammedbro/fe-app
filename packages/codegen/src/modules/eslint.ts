@@ -6,6 +6,10 @@ export const generateEslint: CodegenFn = (generator) => {
     extends: [
       'eslint:recommended',
     ],
+    ignorePatterns: [
+      'node_modules',
+      'build',
+    ],
   };
   const pattern = '*.{js,jsx,ts,tsx,vue}';
 

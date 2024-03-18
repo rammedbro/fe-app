@@ -1,10 +1,9 @@
 import fs from 'node:fs';
 import type { Plugin } from 'vite';
 import type { EmittedAsset } from 'rollup';
-import type { Environment } from '@imolater/fe-app-types';
 import { mapObjectValues } from '@/utils';
 
-type Options = Record<Environment, { src: string; dist: string; }>;
+type Options = Record<string, { src: string; dist: string; }>;
 
 /**
  * Плагин для vite, добавляющий favicon в зависимости от окружения

@@ -1,6 +1,5 @@
 import type { UnimportPluginOptions } from 'unimport/unplugin';
 import type { SentryConfig } from '@/sentry';
-import type { Environment } from '@/config';
 
 /** Интерфейс объекта опций для указания путей до конфиг файлов */
 export interface Configs {
@@ -41,7 +40,7 @@ export interface FEAppConfig {
      */
     useTsConfigPaths?: boolean;
     /** Включить в сборку динамический favicon */
-    useFavicon?: Record<Environment, string>;
+    useFavicon?: Record<string, string>;
   },
   /** Настройка сервера */
   server?: {

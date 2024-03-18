@@ -10,8 +10,8 @@ export interface LoggerOptions {
  * Интерфейс объекта события логгера
  */
 export interface LoggerEvent {
-  name: string;
-  data: object;
+  name?: string;
+  data?: any;
   type?: string;
 }
 
