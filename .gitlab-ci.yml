@@ -38,8 +38,6 @@ install:
   except:
     - tags
     - merge_requests
-  tags:
-    - imolater-mac-runner
   cache:
     policy: pull-push
   script:
@@ -52,8 +50,6 @@ build:
   except:
     - tags
     - merge_requests
-  tags:
-    - imolater-mac-runner
   script:
     - pnpm build
   artifacts:
@@ -141,8 +137,6 @@ sast:
 .release:
   stage: release
   when: manual
-  extends:
-    - .node-modules-cache
   needs:
     - build
   before_script:
@@ -152,11 +146,10 @@ sast:
 
 release:
   extends:
+    - .node-modules-cache
     - .release
   only:
     - master
-  tags:
-    - imolater-mac-runner
   variables:
     GL_TOKEN: $CI_JOB_TOKEN
     GL_API_URL: $CI_API_V4_URL
@@ -169,6 +162,7 @@ release:
 
 release:stage:
   extends:
+    - .node-modules-cache
     - .release
   only:
     - stage
@@ -179,6 +173,7 @@ release:stage:
 
 release:dev:
   extends:
+    - .node-modules-cache
     - .release
   except:
     - tags

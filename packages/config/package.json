@@ -1,7 +1,7 @@
 {
-  "name": "@imolater/fe-app-build",
-  "version": "0.1.0",
-  "description": "Building logic for frontend applications",
+  "name": "@imolater/fe-app-config",
+  "version": "0.0.0",
+  "description": "Config logic for frontend applications",
   "author": "imolater",
   "license": "ISC",
   "repository": {
@@ -34,39 +34,25 @@
     "dist"
   ],
   "bin": {
-    "fe-app-build": "./dist/bin.js"
+    "fe-app-config": "./dist/bin.js"
   },
   "scripts": {
     "build": "rollup -c rollup.config.js",
     "lint": "eslint **/*.ts",
     "lint:types": "tsc --noEmit",
-    "test": "jest",
     "docs": "typedoc src/index.ts"
   },
   "dependencies": {
-    "@imolater/fe-app-types": "0.1.0",
-    "@imolater/fe-app-config": "0.0.0",
-    "@imolater/fe-app-workers": "0.1.0",
-    "@sentry/vite-plugin": "^2.8.0",
     "commander": "^9.5.0",
     "consola": "^3.2.3",
-    "esbuild": "^0.19.11",
-    "lodash.merge": "^4.6.2",
-    "mime-types": "^2.1.35",
-    "require-from-string": "^2.0.2",
-    "unimport": "^3.0.6",
-    "vite": "^4.0.0",
-    "vite-tsconfig-paths": "^4.0.2"
+    "lodash.get": "^4.4.2"
   },
   "devDependencies": {
     "@fe-app/eslint-config-base": "workspace:0.0.0",
-    "@fe-app/jest-config": "workspace:0.0.0",
     "@fe-app/lint-staged-config": "workspace:0.0.0",
     "@fe-app/rollup-config": "workspace:0.0.0",
     "@fe-app/tsconfig": "workspace:0.0.0",
     "@fe-app/typedoc-config": "workspace:0.0.0",
-    "@types/lodash.merge": "^4.6.9",
-    "@types/mime-types": "^2.1.1",
-    "@types/require-from-string": "^1.2.3"
+    "@types/lodash.get": "^4.4.9"
   }
 }

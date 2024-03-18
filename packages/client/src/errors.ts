@@ -1,4 +1,11 @@
-import type { RequestErrorData } from '@imolater/fe-app-types';
+/**
+ * Интерфейс данных ошибки запроса
+ */
+export interface RequestErrorData {
+  message: string;
+  code: string;
+  data: object;
+}
 
 /**
  * Класс ошибок запроса

@@ -1,59 +1,49 @@
 import SentryCli from '@sentry/cli';
 import { unlink } from 'fs/promises';
 import { glob } from 'glob';
-import { getViteConfig } from '@imolater/fe-app-build';
-import type { SentryConfig, ViteMode } from '@imolater/fe-app-types';
+import type { SentryConfig } from '@imolater/fe-app-types';
 
-export function getSentry(env: ViteMode, options: SentryConfig) {
-  return new Sentry(env, options);
+interface Options {
+  env?: string;
+  outDir?: string;
+  assetsDir?: string;
 }
 
-class Sentry {
-  private readonly cli: SentryCli;
-  private readonly options: SentryConfig;
-  private readonly env: ViteMode;
+export async function createSentryRelease(
+  config: SentryConfig,
+  options: Options = {}
+) {
+  const cli = new SentryCli(undefined, {
+    silent: true,
+    ...config,
+  });
 
-  constructor(env: ViteMode, options: SentryConfig) {
-    this.cli = new SentryCli(undefined, {
-      silent: true,
-      ...options,
-    });
-    this.env = env;
-    this.options = options;
+  const release = config.release;
+  await cli.releases.new(release);
+
+  const assetsDir = options?.assetsDir || 'assets';
+  const sourceMap = config.sourceMaps || {
+    urlPrefix: `~/${ assetsDir }`,
+    include: [`./${ options?.outDir || 'build' }/${ assetsDir }`],
+    ignore: ['node_modules'],
+    validate: true,
+  };
+  await cli.releases.uploadSourceMaps(release, sourceMap);
+
+  const deploy = config.deploy || {
+    env: options.env || 'production',
+  };
+  await cli.releases.newDeploy(release, deploy);
+
+  await cli.releases.finalize(release);
+
+  const files = await glob(sourceMap.include.map(
+    path => `${ path }/**/*.map`,
+  ));
+
+  for (const file of files) {
+    await unlink(file);
   }
 
-  async createRelease() {
-    const viteConfig = await getViteConfig(this.env);
-    const { outDir, assetsDir } = viteConfig.build;
-
-    const release = this.options.release;
-    await this.cli.releases.new(release);
-
-    const sourceMap = {
-      urlPrefix: `~/${ assetsDir }`,
-      include: [ `./${ outDir }/${ assetsDir }` ],
-      ignore: [ 'node_modules' ],
-      validate: true,
-      ...this.options.sourceMaps,
-    };
-    await this.cli.releases.uploadSourceMaps(release, sourceMap);
-
-    const deploy = {
-      env: this.env,
-      ...this.options.deploy,
-    };
-    await this.cli.releases.newDeploy(release, deploy);
-
-    await this.cli.releases.finalize(release);
-
-    const files = await glob(sourceMap.include.map(
-      path => `${ path }/**/*.map`,
-    ));
-
-    for (const file of files) {
-      await unlink(file);
-    }
-
-    return release;
-  }
+  return release;
 }

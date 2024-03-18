@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { runServer, runDevServer } from '@imolater/fe-app-server';
+import * as server from '@imolater/fe-app-server';
 import { handleConfigsPreActionHook } from '@imolater/fe-app-build/cli';
 
 const program = new Command('server');
@@ -7,6 +7,11 @@ const program = new Command('server');
 program
   .name('server')
   .description('Модуль сервера');
+
+const start = program
+  .command('start')
+  .description('Запуск сервера в режиме продукта')
+  .action(server.start);
 
 const dev = program
   .command('dev')
@@ -16,12 +21,7 @@ const dev = program
   .option('--client-config <string>', 'Путь до конфигурационного файла клиента')
   .option('--server-config <string>', 'Путь до конфигурационного файла сервера')
   .hook('preAction', handleConfigsPreActionHook)
-  .action(runDevServer);
-
-const start = program
-  .command('start')
-  .description('Запуск сервера в режиме продукта')
-  .action(runServer);
+  .action(server.dev);
 
 export {
   program as default,

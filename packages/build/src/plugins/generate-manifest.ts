@@ -1,5 +1,4 @@
 import type { Plugin } from 'vite';
-import type { ViteConfig } from '@/types';
 
 /**
  * Плагин для vite, генерирующий manifest.json
@@ -12,7 +11,7 @@ export function generateManifest(options: {
   return {
     name: 'fe-app-generate-manifest',
     config(config) {
-      (config as ViteConfig).build.manifest = options.path;
+      config.build!.manifest = options.path;
     },
     transformIndexHtml: {
       transform(html) {

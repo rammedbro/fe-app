@@ -1,12 +1,12 @@
 import type { Plugin } from 'vite';
-import type { Config } from '@imolater/fe-app-types';
+import type { ConfigJson } from '@imolater/fe-app-config';
 
 /**
  * Плагин для vite, добавляющий app.config в начало html документа
  *
  * @returns {Plugin}
  */
-export function insertConfig(config: Config): Plugin {
+export function insertConfig(config: ConfigJson): Plugin {
   return {
     name: 'fe-app-insert-config-plugin',
     transformIndexHtml: {
@@ -18,7 +18,7 @@ export function insertConfig(config: Config): Plugin {
             {
               tag: 'script',
               injectTo: 'head-prepend',
-              children: `window.___config = ${ JSON.stringify(config) }`,
+              children: `const __CONFIG__ = ${ JSON.stringify(config) }`,
             },
           ],
         };

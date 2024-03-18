@@ -31,6 +31,7 @@
     "docs": "typedoc src/index.ts"
   },
   "dependencies": {
+    "@imolater/fe-app-config": "0.0.0",
     "@imolater/fe-app-types": "0.1.0"
   },
   "devDependencies": {
@@ -39,5 +40,8 @@
     "@fe-app/rollup-config": "workspace:0.0.0",
     "@fe-app/tsconfig": "workspace:0.0.0",
     "@fe-app/typedoc-config": "workspace:0.0.0"
+  },
+  "peerDependencies": {
+    "axios": "^1.6.7"
   }
 }
