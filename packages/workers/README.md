@@ -1,16 +1,16 @@
 # @imolater/fe-app-workers
 
-Пакет с различными веб-воркерами.
+Web workers for frontend applications.
 
-## Установка
+## Install
 
-Устанавливаем пакет:
+Install the package
 
 ```bash
 npm install @imolater/fe-app-workers
 ```
 
-Включаем воркеры в сборку в `fe-app.config.ts` в ключе [build](../types/docs/api/interfaces/FEAppConfig.md#build):
+Include workers into bundle in config key [build](../types/docs/api/interfaces/FEAppConfig.md#build):
 
 ```ts
 export default {
@@ -22,22 +22,20 @@ export default {
 };
 ```
 
-## Использование
+## Usage
 
-### Создание
+### Run
 
 ```ts
 import { dedicatedWorker } from '@imolater/fe-app-workers';
 
-dedicatedWorker.run({
-  checkAppUpdateInterval: 60 * 60 * 1000
-});
+dedicatedWorker.run();
 ```
 
-### Подписка на события
+### Events
 
 ```ts
-dedicatedWorker.on('app-update', data => {
+dedicatedWorker.on('update', data => {
   console.log(data);
 });
 
@@ -46,7 +44,7 @@ dedicatedWorker.on('error', e => {
 });
 ```
 
-### Уничтожение
+### Stop
 
 ```ts
 dedicatedWorker.terminate();
@@ -54,4 +52,4 @@ dedicatedWorker.terminate();
 
 ## API
 
-[Документация](./docs/api/README.md)
+[Docs](./docs/api/README.md)

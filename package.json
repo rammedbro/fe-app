@@ -1,5 +1,6 @@
 {
   "private": true,
+  "description": "Family of packages for scaffolding frontend applications",
   "repository": "https://gitlab.com/imolater/fe-app.git",
   "packageManager": "pnpm@8.7.5",
   "scripts": {

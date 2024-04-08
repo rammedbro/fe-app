@@ -1,28 +1,28 @@
 # @imolater/fe-app-client
 
-Общий клиентский код для frontend приложений.
+Client logic for frontend applications.
 
-## Установка
+## Install
 
 ```bash 
 npm install @imolater/fe-app-client
 ```
 
-## Использование
+## Usage
 
-### Логгер
+### Logger
 
 ```ts 
 import { getLogger } from '@imolater/fe-app-client';
 
-// Получение инстанса
+// Create a logger
 const logger = getLogger(window.___config, {
   extra: {
     additionalKey: 'some-data-that-i-used-to-know',
   },
 });
 
-// Отправка события
+// Log something like errors
 try {
   someFunctionThatMightThrowException();
 } catch (e) {
@@ -35,4 +35,4 @@ try {
 
 ## API
 
-[Документация](./docs/api/README.md)
+[Docs](./docs/api/README.md)

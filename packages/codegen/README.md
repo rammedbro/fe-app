@@ -1,26 +1,26 @@
 # @imolater/fe-app-codegen
 
-Модуль кодогенерации для фронтенд проектов.
+Code generation for frontend applications.
 
-## Установка
+## Install
 
 ```bash 
 npm install @imolater/fe-app-cli
 ```
 
-## Использование
+## Usage
 
 ### init-project
 
-Первоначальная настройка проекта. Генерируются файлы husky, eslint, stylelint и т.д.
+Setup most common frontend tools such as husky, eslint, stylelint, etc.
 
 ```bash
 fe-app codegen init-project
 ```
 
-## Модули
+## Tools
 
-Для каждого выбранного модуля создается конфигурационный файл и/или добавляется скрипт запуска в `package.json`.
+For each chosen tool will be created a config file or added a script to `package.json`.
 
 * [husky](https://github.com/typicode/husky)
 * [lint-staged](https://github.com/okonet/lint-staged)
@@ -31,4 +31,4 @@ fe-app codegen init-project
 
 ## API
 
-[Документация](./docs/api/README.md)
+[Docs](./docs/api/README.md)

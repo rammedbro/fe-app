@@ -1,14 +1,14 @@
 # @imolater/fe-app-cli
 
-Интерфейс командной строки для модулей fe-app.
+Command line interface for fe-app modules.
 
-## Установка
+## Install
 
 ```bash 
 npm install @imolater/fe-app-cli
 ```
 
-## Модули
+## Modules
 
 | Пакет                    | Readme                                                                                   |
 |--------------------------|------------------------------------------------------------------------------------------|
@@ -20,4 +20,4 @@ npm install @imolater/fe-app-cli
 
 ## API
 
-[Документация](./docs/api/README.md)
+[Docs](./docs/api/README.md)

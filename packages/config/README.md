@@ -1,23 +1,34 @@
 # @imolater/fe-app-config
 
-Модуль с логикой разрешения конфига для frontend приложений
+Providing a config for frontend applications.
 
-## Установка
+## Install
 
 ```bash 
 npm install @imolater/fe-app-config
 ```
 
-## Использование
+## Usage
 
 ### show
 
-Вывод текущего конфига
+Show current configuration
+
+```bash
+fe-app config show [options]
+```
+
+**Options**:
+
+* `--config`: path to json config file. Default `config.json`.
+
+**Examples**:
 
 ```bash
 fe-app config show
+fe-app config show --config configs/config.json
 ```
 
 ## API
 
-[Документация](./docs/api/README.md)
+[Docs](./docs/api/README.md)

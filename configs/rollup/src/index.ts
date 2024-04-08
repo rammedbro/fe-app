@@ -24,6 +24,11 @@ interface RollupConfig extends RollupOptions {
   };
 }
 
+/**
+ * Returns a Rollup configuration for the given project root and array of Rollup configurations.
+ * @param root the project root
+ * @param configs the array of Rollup configurations
+ */
 export function getRollupConfig(root: string, configs: RollupConfig[]) {
   const pkgPath = path.resolve(root, 'package.json');
   const pkg: PackageJson = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
@@ -69,8 +74,8 @@ export function getRollupConfig(root: string, configs: RollupConfig[]) {
     }
 
     if (config.options?.external !== false) {
+      // Exclude prod, peer, builtin deps from bundle
       mergedConfig.external = [
-        // Исключаем из бандла любые зависимости prod, peer, builtin
         pkg.name,
         ...Object.keys(pkg.dependencies || {}),
         ...Object.keys(pkg.peerDependencies || {}),
