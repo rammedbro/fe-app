@@ -1,24 +1,24 @@
 # @imolater/fe-app-server
 
-Серверный модуль написанный на [express](https://expressjs.com/) с раздачей статики и роутингом всех остальных
-запросов на `index.html` (spa приложение собранное на vite).
+Server module using [express](https://expressjs.com/) for serving static files and routing all other requests 
+to `index.html` - an SPA application built with Vite.
 
-## Установка
+## Install
 
 ```bash 
 npm install @imolater/fe-app-cli
 ```
 
-## Настройка
+## Configuration
 
-Данному модулю в конфигурационном файле `--fe-app-config` соответствует ключ
-[server](../types/docs/api/interfaces/FEAppConfig.md#server).
+This module corresponds to the [server](../types/docs/api/interfaces/FEAppConfig.md#server) key 
+in the configuration file `--fe-app-config`.
 
-## Использование
+## Usage
 
 ### start
 
-Запуск сервера в режиме `production`
+Starts the server in `production` mode.
 
 ```bash
 fe-app start
@@ -26,23 +26,20 @@ fe-app start
 
 ### dev
 
-Запуск сервера в режиме `development`
+Starts the server in `development` mode.
 
 ```bash
 fe-app dev [options]
 ```
 
-**Опции**:
+**Options**:
 
-* `--fe-app-config` - путь до конфиг файла fe-app, экспортирующего объект типа
-  [FEAppConfig](../types/docs/api/interfaces/FEAppConfig.md). По умолчанию равен `fe-app.config.ts`.
-* `--server-config` - путь до конфиг файла сервера, экспортирующего функцию типа
-  [ServerConfig](../types/docs/api/modules/server.md#serverconfig)
-* `--client-config` - путь до конфиг файла клиента, экспортирующего функцию типа
-  [ClientConfig](../types/docs/api/modules/client.md#clientconfig)
-* `--vite-config` - путь до конфиг файла сборки, экспортирующего вызов функции vite `defineConfig`
+* `--fe-app-config` - Path to the fe-app configuration file exporting an object of type [FEAppConfig](../types/docs/api/interfaces/FEAppConfig.md). Default is `fe-app.config.ts`.
+* `--server-config` - Path to the server configuration file exporting a function of type [ServerConfig](../types/docs/api/modules/server.md#serverconfig).
+* `--client-config` - Path to the client configuration file exporting a function of type [ClientConfig](../types/docs/api/modules/client.md#clientconfig).
+* `--vite-config` - Path to the build configuration file exporting a call to the Vite `defineConfig` function.
 
-**Примеры**:
+**Examples**:
 
 ```bash
 fe-app dev
@@ -53,4 +50,4 @@ fe-app dev --fe-app-config=fe-app.config.ts --vite-config=vite.config.ts --clien
 
 ## API
 
-[Документация](./docs/api/README.md)
+[Docs](./docs/api/README.md)

@@ -1,35 +1,33 @@
 # @imolater/fe-app-build
 
-Модуль сборки с использованием [vite](https://vitejs.dev/).
+A build module using [vite](https://vitejs.dev/).
 
-## Установка
+## Installation
 
-```bash 
+```bash
 npm install @imolater/fe-app-cli
 ```
 
-## Настройка
+## Configuration
 
-Данному модулю в конфигурационном файле `--fe-app-config` соответствует ключ
-[build](../types/docs/api/interfaces/FEAppConfig.md#build).
+This module corresponds to the `build` key in the `--fe-app-config` configuration file.
 
-## Использование
+## Usage
 
 ### build
 
-Запуск сборки в режиме `production`
+Start the build in `production` mode.
 
 ```bash
 fe-app build [options]
 ```
 
-**Опции**:
+**Options**:
 
-* `--fe-app-config` - путь до конфиг файла fe-app, экспортирующего объект типа
-  [FEAppConfig](../types/docs/api/interfaces/FEAppConfig.md). По умолчанию равен `fe-app.config.ts`.
-* `--vite-config` - путь до конфиг файла сборки, экспортирующего вызов функции vite `defineConfig`
+* `--fe-app-config`: path to the fe-app configuration file exporting an object of the `FEAppConfig` type. By default, it is `fe-app.config.ts`.
+* `--vite-config`: path to the build configuration file exporting a call to the vite `defineConfig` function.
 
-**Примеры**:
+**Examples**:
 
 ```bash
 fe-app build
@@ -38,4 +36,4 @@ fe-app build --fe-app-config=fe-app.config.ts --vite-config=vite.config.ts
 
 ## API
 
-[Документация](./docs/api/README.md)
+[Documentation](./docs/api/README.md)

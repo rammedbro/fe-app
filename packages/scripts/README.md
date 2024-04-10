@@ -1,30 +1,30 @@
 # @imolater/fe-app-scripts
 
-Модуль с различными вспомогательными скриптами.
+Useful scripts for frontend applications.
 
-## Установка
+## Install
 
 ```bash 
 npm install @imolater/fe-app-cli
 ```
 
-## Использование
+## Usage
 
 ### lint-types
 
-Проверка типов проекта с помощью [vue-tsc](https://www.npmjs.com/package/vue-tsc)
+Project type checking using [vue-tsc](https://www.npmjs.com/package/vue-tsc)
 
 ```bash
 fe-app scripts lint-types [files...] [options...]
 ```
 
-**Аргументы**:
+**Arguments**:
 
-* `files` - Проверяемые файлы, указанные через пробел. Если оставить пустым будут проверены все файлы проекта,
-  указанные в `tsconfig.json`.
-* `options` - Опции vue-tsc
+* `files` - files to be checked, specified with spaces. If left empty, 
+            all project files specified in `tsconfig.json` will be checked.
+* `options` - vue-tsc options
 
-**Примеры**:
+**Examples**:
 
 ```bash
 fe-app scripts lint-types
@@ -35,19 +35,18 @@ fe-app scripts lint-types src/index.ts --noEmit
 
 ### validate-node-version
 
-Проверка соответствия версии Node и указанной в .nvmrc
+Checking the Node version compliance with the one specified in .nvmrc
 
 ```bash
 fe-app scripts validate-node-version
 ```
 
-Рекомендуется добавить этот скрипт в `pre-commit` хук. Пример:
+It is recommended to add this script to the `pre-commit` hook. Example:
 
 ```bash
-npx lint-staged # уже существующая проверка
 fe-app scripts validate-node-version
 ```
 
 ## API
 
-[Документация](./docs/api/README.md)
+[Docs](./docs/api/README.md)
