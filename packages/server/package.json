@@ -41,7 +41,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://gitlab.x5food.tech/npm/x5digital/fe-app.git"
+    "url": "https://gitlab.com/imolater/fe-app.git"
   },
   "dependencies": {
     "@imolater/fe-app-build": "0.3.0",

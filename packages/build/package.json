@@ -6,7 +6,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.x5food.tech/npm/x5digital/fe-app.git"
+    "url": "https://gitlab.com/imolater/fe-app.git"
   },
   "engines": {
     "node": ">=14.19.0"
