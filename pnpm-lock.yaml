@@ -191,13 +191,13 @@ importers:
   packages/build:
     dependencies:
       '@imolater/fe-app-config':
-        specifier: 0.1.0
+        specifier: 0.1.1
         version: link:../config
       '@imolater/fe-app-types':
-        specifier: 0.2.0
+        specifier: 0.3.0
         version: link:../types
       '@imolater/fe-app-workers':
-        specifier: 0.1.0
+        specifier: 0.2.0
         version: link:../workers
       '@sentry/vite-plugin':
         specifier: ^2.8.0
@@ -261,19 +261,19 @@ importers:
   packages/cli:
     dependencies:
       '@imolater/fe-app-build':
-        specifier: 0.2.0
+        specifier: 0.3.0
         version: link:../build
       '@imolater/fe-app-codegen':
-        specifier: 0.2.0
+        specifier: 0.2.1
         version: link:../codegen
       '@imolater/fe-app-scripts':
-        specifier: 0.1.0
+        specifier: 0.1.1
         version: link:../scripts
       '@imolater/fe-app-server':
-        specifier: 0.2.0
+        specifier: 0.2.1
         version: link:../server
       '@imolater/fe-app-types':
-        specifier: 0.2.0
+        specifier: 0.3.0
         version: link:../types
       commander:
         specifier: ^9.4.1
@@ -301,13 +301,13 @@ importers:
   packages/client:
     dependencies:
       '@imolater/fe-app-config':
-        specifier: 0.1.0
+        specifier: 0.1.1
         version: link:../config
       '@imolater/fe-app-types':
-        specifier: 0.2.0
+        specifier: 0.3.0
         version: link:../types
       '@imolater/fe-app-workers':
-        specifier: 0.1.0
+        specifier: 0.2.0
         version: link:../workers
       axios:
         specifier: ^1.6.7
@@ -452,13 +452,13 @@ importers:
   packages/server:
     dependencies:
       '@imolater/fe-app-build':
-        specifier: 0.2.0
+        specifier: 0.3.0
         version: link:../build
       '@imolater/fe-app-config':
-        specifier: 0.1.0
+        specifier: 0.1.1
         version: link:../config
       '@imolater/fe-app-types':
-        specifier: 0.2.0
+        specifier: 0.3.0
         version: link:../types
       '@sentry/cli':
         specifier: ^2.20.5

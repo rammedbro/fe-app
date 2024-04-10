@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://gitlab.x5food.tech/npm/x5digital/fe-app/compare/@imolater/fe-app-config@0.1.0...@imolater/fe-app-config@0.1.1) (2024-04-10)
+
+**Note:** Version bump only for package @imolater/fe-app-config
+
+
+
+
+
 # 0.1.0 (2024-03-18)
 
 
