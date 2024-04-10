@@ -5,6 +5,7 @@ import mime from 'mime-types';
 import lodashMerge from 'lodash.merge';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { installWorkers } from '@imolater/fe-app-workers/vite-plugin';
 import type { InlineConfig, LibraryOptions, PluginOption, UserConfig, BuildOptions } from 'vite';
 import type { UnimportPluginOptions } from 'unimport/unplugin';
 import type { FEAppConfig, Configs } from '@imolater/fe-app-types';
@@ -67,7 +68,8 @@ export async function getViteConfig(
   const assets = {
     buildMeta: assetPath('build.json'),
     manifest: assetPath('manifest.json'),
-    worker: assetPath('worker.js'),
+    dedicatedWorker: assetPath('dedicated-worker.js'),
+    serviceWorker: assetPath('service-worker.js'),
   };
   const viteLibBuildOptions = {
     outDir: cwd,
@@ -175,13 +177,14 @@ export async function getViteConfig(
     }
 
     if (feAppConfig.build?.useWorkers?.dedicated) {
-      const { installDedicatedWorker } = await import('@imolater/fe-app-workers/vite-plugin');
-
       viteConfig.plugins.push(
-        installDedicatedWorker({
-          workerAssetPath: assets.worker,
-          buildMetaAssetPath: assets.buildMeta,
-        }),
+        installWorkers({ dedicated: assets.dedicatedWorker }),
+      );
+    }
+
+    if (feAppConfig.build?.useWorkers?.service) {
+      viteConfig.plugins.push(
+        installWorkers({ service: assets.serviceWorker }),
       );
     }
 
