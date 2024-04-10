@@ -1,17 +1,16 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import process from 'node:process';
 import express from 'express';
 import createHttpError from 'http-errors';
 import {
   getViteConfig,
   createDevServer,
-  loadModule, ViteMode,
+  loadModule,
+  type ViteMode,
 } from '@imolater/fe-app-build';
-import { getConfig } from '@imolater/fe-app-config';
 import type { Config, ConfigJson } from '@imolater/fe-app-config';
 import type { FEAppConfig, Configs } from '@imolater/fe-app-types';
-import { getApplication, getLogger, createSentryRelease } from '@/services';
+import { getApplication, createSentryRelease } from '@/services';
 import {
   logMiddleware,
   clientErrorMiddleware,
@@ -26,12 +25,9 @@ import {
  * @returns {Promise<void>}
  */
 export async function start(): Promise<void> {
-  // TODO: Убрать config, logger в application
-  const config = getConfig(loadModule('config.json'));
-  const logger = getLogger({ extra: { pid: process.pid } });
-  const app = getApplication(config, logger);
-  const env = config.env() as ViteMode;
-  const viteConfig = await getViteConfig(env, config);
+  const app = getApplication();
+  const env = app.config.env() as ViteMode;
+  const viteConfig = await getViteConfig(env, app.config);
   const { configs } = viteConfig.build.meta;
   const { outDir, assetsDir } = viteConfig.build;
   const assetsPath = path.join(outDir, assetsDir);
@@ -42,15 +38,15 @@ export async function start(): Promise<void> {
     const feAppConfig = loadModule<FEAppConfig>(configs.feAppConfig);
 
     if (feAppConfig.logLevel === 'all') {
-      app.use(logMiddleware(logger));
+      app.use(logMiddleware(app.logger));
     }
 
     if (feAppConfig.server?.metrics) {
-      // const metric = getMetric(config, logger);
-      app.use(httpMetricMiddleware(logger));
+      // const metric = getMetric(config, app.logger);
+      app.use(httpMetricMiddleware(app.logger));
     }
 
-    if (feAppConfig.server?.sentry && config.prod()) {
+    if (feAppConfig.server?.sentry && app.config.prod()) {
       createSentryRelease(
         {
           silent: feAppConfig.logLevel !== 'all',
@@ -62,9 +58,9 @@ export async function start(): Promise<void> {
           assetsDir,
         })
         .then((release) => {
-          logger.info({ data: `Sentry release ${ release } is sent.` });
+          app.logger.info({ data: `Sentry release ${ release } is sent.` });
         })
-        .catch(e => logger.error({
+        .catch(e => app.logger.error({
           name: 'Server Error',
           data: {
             code: '500',
@@ -82,7 +78,7 @@ export async function start(): Promise<void> {
 
     indexHtml = indexHtml.replace(
       '<head>',
-      `<head><script>const __CONFIG__  = ${JSON.stringify(clientConfig(config))}</script>`,
+      `<head><script>const __CONFIG__  = ${ JSON.stringify(clientConfig(app.config)) }</script>`,
     );
   }
 
@@ -103,8 +99,8 @@ export async function start(): Promise<void> {
   });
 
   // Error handlers
-  app.use(clientErrorMiddleware(logger, indexHtml));
-  app.use(serverErrorMiddleware(logger, indexHtml));
+  app.use(clientErrorMiddleware(app.logger, indexHtml));
+  app.use(serverErrorMiddleware(app.logger, indexHtml));
 
   // Server running
   app.listen();
@@ -116,10 +112,8 @@ export async function start(): Promise<void> {
  * @param {Configs} configs - опции для указания путей до конфиг файлов
  * @returns {Promise<void>}
  */
-export async function dev(configs: Configs = {}) {
-  const config = getConfig(loadModule('config.json'));
-  const logger = getLogger({ extra: { pid: process.pid } });
-  const app = getApplication(config, logger, configs);
+export async function dev(configs: Configs = {}): Promise<void> {
+  const app = getApplication(configs);
   const vite = await createDevServer(configs);
 
   // Middlewares

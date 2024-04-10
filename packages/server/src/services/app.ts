@@ -1,9 +1,11 @@
 import inspector from 'node:inspector';
 import express from 'express';
 import { loadModule } from '@imolater/fe-app-build';
+import { getConfig } from '@imolater/fe-app-config';
 import type { Config } from '@imolater/fe-app-config';
 import type { Configs, Logger } from '@imolater/fe-app-types';
 import type http from 'node:http';
+import { getLogger } from '@/services/logger';
 
 // type SocketEventHandler = (event: string, data: object, socket: socket.Socket) => void;
 type Express = Omit<express.Express, 'listen'>;
@@ -12,6 +14,8 @@ type Express = Omit<express.Express, 'listen'>;
  * Модифицированный express сервер
  */
 interface Application extends Express {
+  config: Config;
+  logger: Logger;
   /**
    * Модифицированный метод listen, принимающий только callback
    *
@@ -69,16 +73,14 @@ type ServerConfig = (app: Application) => void;
 
 // TODO: Сделать свою абстракцию над express app
 export function getApplication(
-  config: Config,
-  logger: Logger,
   configs: Configs = {},
 ) {
   const app = express() as unknown as Application;
+  const config = getConfig(loadModule('config.json'));
+  const logger = getLogger({ extra: { pid: process.pid } });
 
-  /**
-   *
-   * @param extend
-   */
+  app.config = config;
+  app.logger = logger;
   app.extendServer = (extend) => {
     const listen = app.listen;
 
