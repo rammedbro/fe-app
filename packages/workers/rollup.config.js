@@ -4,6 +4,7 @@ import { getRollupConfig } from '@fe-app/rollup-config';
 
 const __dirname = new URL('.', import.meta.url).pathname;
 const __DEDICATED_WORKER_DIST_PATH__ = 'workers/dedicated-worker.js';
+const __SERVICE_WORKER_DIST_PATH__ = 'workers/service-worker.js';
 
 export default getRollupConfig(__dirname, [
   {
@@ -19,6 +20,7 @@ export default getRollupConfig(__dirname, [
     options: {
       define: {
         __DEDICATED_WORKER_DIST_PATH__: JSON.stringify(__DEDICATED_WORKER_DIST_PATH__),
+        __SERVICE_WORKER_DIST_PATH__: JSON.stringify(__SERVICE_WORKER_DIST_PATH__),
       },
       dts: 'dist/vite-plugin.d.ts',
     },
@@ -27,6 +29,15 @@ export default getRollupConfig(__dirname, [
     input: 'src/workers/dedicated-worker.ts',
     output: {
       file: join('dist', __DEDICATED_WORKER_DIST_PATH__),
+    },
+    options: {
+      dts: false,
+    },
+  },
+  {
+    input: 'src/workers/service-worker.ts',
+    output: {
+      file: join('dist', __SERVICE_WORKER_DIST_PATH__),
     },
     options: {
       dts: false,

@@ -1,10 +1,6 @@
 /// <reference lib="dom" />
 
-import type {
-  WorkerOptions,
-  ClientEventMessage,
-  WorkerEventMessage,
-} from '@/types/dedicated-worker';
+import type { EventMessage } from '@/types';
 
 declare const __DEDICATED_WORKER_ASSET_PATH__: string;
 
@@ -13,37 +9,25 @@ declare const __DEDICATED_WORKER_ASSET_PATH__: string;
  *
  * @link https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers#dedicated_workers
  */
-export class DedicatedWorker {
-  private worker: Worker | null = null;
-  private readonly events: Map<ClientEventMessage['type'], (payload: any) => void> = new Map();
+export class DedicatedWorker extends EventTarget {
+  worker: Worker | null = null;
 
   /**
    * Запуск воркера
    *
-   * @param {WorkerOptions} options
    * @throws {Error}
    */
-  run(options?: WorkerOptions) {
+  start() {
     if (!window.Worker) {
-      throw new Error('Веб воркеры не поддерживаются данным браузером');
+      throw new Error('Web workers are not supported in your browser!');
     }
 
     if (this.worker) {
-      throw new Error('Воркер уже запущен. Одновременно возможна работа только одного экземпляра');
+      throw new Error('Worker is already running!');
     }
 
     this.worker = new Worker(__DEDICATED_WORKER_ASSET_PATH__);
-    this.worker.onmessage = (event: MessageEvent<ClientEventMessage>) => {
-      const { type, data } = event.data;
-      const callback = this.events.get(type);
-
-      if (!callback) {
-        return;
-      }
-
-      callback(data);
-    };
-    this.worker.postMessage({ type: 'install', data: options } as WorkerEventMessage);
+    this.worker.onmessage = (event: MessageEvent<EventMessage>) => this.dispatchEvent(event);
   }
 
   /**
@@ -51,30 +35,13 @@ export class DedicatedWorker {
    *
    * @throws {Error}
    */
-  terminate() {
+  stop() {
     if (!this.worker) {
-      throw new Error('Воркер не запущен');
+      throw new Error('Worker is not running!');
     }
 
     this.worker.terminate();
     this.worker = null;
-  }
-
-  /**
-   * Подписка на события воркера
-   *
-   * @param {ClientEventMessage['type']} type
-   * @param {(payload: any) => void} callback
-   */
-  on(type: ClientEventMessage['type'], callback: (payload: unknown) => void): void;
-  /**
-   * Подписка на событие ошибки воркера
-   *
-   * @param {'error'} type
-   * @param {(error: Error) => void} callback
-   */
-  on(type: 'error', callback: (error: Error) => void): void {
-    this.events.set(type, callback);
   }
 }
 

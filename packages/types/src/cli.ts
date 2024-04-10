@@ -30,7 +30,8 @@ export interface FEAppConfig {
     useAutoImport?: boolean | Partial<UnimportPluginOptions>;
     /** Включить в сборку воркеры */
     useWorkers?: {
-      dedicated: boolean;
+      dedicated?: boolean;
+      service?: boolean;
     };
     /** Включить поддержку глобальной переменной global */
     useGlobal?: boolean;

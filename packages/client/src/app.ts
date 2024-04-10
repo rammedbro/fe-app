@@ -6,11 +6,12 @@ import { getBrowserData } from './utils';
 
 declare const __CONFIG__: ConfigJson;
 
-export function getApplication() {
+export async function getApplication() {
   const config = getConfig(__CONFIG__);
   const logger = getLogger({ extra: { browser: getBrowserData() } });
   const api = getApi(config.get('api.url'));
   const emitter = new EventTarget();
+  const { dedicatedWorker, serviceWorker } = await import('@imolater/fe-app-workers');
 
   /** Error handlers */
   window.onerror = (message, source, line, col, error) => {
@@ -76,5 +77,9 @@ export function getApplication() {
     logger,
     api,
     emitter,
+    workers: {
+      dedicated: dedicatedWorker,
+      service: serviceWorker,
+    },
   };
 }
