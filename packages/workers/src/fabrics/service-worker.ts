@@ -58,4 +58,4 @@ export class ServiceWorker extends EventTarget {
  *
  * @type {DedicatedWorker}
  */
-export const serviceWorker = new ServiceWorker();
+export const serviceWorker: ServiceWorker = new ServiceWorker();

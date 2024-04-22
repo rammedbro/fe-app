@@ -16,7 +16,7 @@ export function installWorkers(
     dedicated: __DEDICATED_WORKER_DIST_PATH__,
     service: __SERVICE_WORKER_DIST_PATH__,
   };
-  const asset = (name: keyof typeof assets) =>  readFileSync(
+  const asset = (name: keyof typeof assets) => readFileSync(
     join(dirname(fileURLToPath(import.meta.url)), assets[name]),
     'utf-8',
   );
@@ -24,10 +24,14 @@ export function installWorkers(
   return {
     name: 'fe-app-install-workers',
     config: (config) => {
-      config.define = Object.assign(config.define || {}, {
-        __DEDICATED_WORKER_ASSET_PATH__: JSON.stringify(`/${ options.dedicated }`),
-        __SERVICE_WORKER_ASSET_PATH__: JSON.stringify(`/${ options.service }`),
-      });
+      config.define = Object.assign(
+        config.define || {},
+        Object.fromEntries(
+          Object.entries(options).map(([key, value]) => [
+            `__${ key.toUpperCase() }_WORKER_ASSET_PATH__`,
+            JSON.stringify(`/${ value }`),
+          ])),
+      );
     },
     configureServer({ middlewares }) {
       Object.entries(options).forEach(worker => {
