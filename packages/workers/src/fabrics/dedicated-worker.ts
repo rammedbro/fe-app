@@ -50,4 +50,4 @@ export class DedicatedWorker extends EventTarget {
  *
  * @type {DedicatedWorker}
  */
-export const dedicatedWorker = new DedicatedWorker();
+export const dedicatedWorker: DedicatedWorker = new DedicatedWorker();
