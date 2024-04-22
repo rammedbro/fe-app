@@ -29,6 +29,5 @@ pnpm build
 
 ## Issues
 
-* After each build you need to reinstall packages `pnpm install`
 * Lerna incorrectly implements gitlab releases, so it's need to be auto-patched
   with [lerna@7.3.0.patch](patches/lerna@7.3.0.patch)`
