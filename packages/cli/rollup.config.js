@@ -12,10 +12,10 @@ export default getRollupConfig(__dirname, [
     input: 'src/bin.ts',
     output: {
       file: 'dist/bin.js',
-      banner: '#!/usr/bin/env node\n',
     },
     options: {
       dts: false,
+      shebang: true,
     },
   },
 ]);

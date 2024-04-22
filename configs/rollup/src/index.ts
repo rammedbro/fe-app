@@ -10,6 +10,7 @@ import copy, { type CopyOptions } from 'rollup-plugin-copy';
 import cleanup from 'rollup-plugin-cleanup';
 import del from 'rollup-plugin-delete';
 import replace, { type RollupReplaceOptions } from '@rollup/plugin-replace';
+import shebang, { type ShebangOptions } from 'rollup-plugin-shebang-bin';
 import type { PackageJson } from 'type-fest';
 
 interface RollupConfig extends RollupOptions {
@@ -21,6 +22,7 @@ interface RollupConfig extends RollupOptions {
     dts?: boolean | string,
     copy?: CopyOptions,
     define?: RollupReplaceOptions,
+    shebang?: boolean | ShebangOptions,
   };
 }
 
@@ -93,6 +95,14 @@ export function getRollupConfig(root: string, configs: RollupConfig[]) {
         preventAssignment: true,
         ...config.options.define,
       }));
+    }
+
+    if (config.options?.shebang) {
+      const options =
+        (typeof config.options.shebang === 'object')
+          ? config.options.shebang
+          : { include: ['**/*.ts'] };
+      mergedConfig.plugins!.push(shebang(options));
     }
   }
 
