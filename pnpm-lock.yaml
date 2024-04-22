@@ -263,6 +263,9 @@ importers:
       '@imolater/fe-app-build':
         specifier: 0.3.0
         version: link:../build
+      '@imolater/fe-app-client':
+        specifier: 0.3.0
+        version: link:../client
       '@imolater/fe-app-codegen':
         specifier: 0.2.1
         version: link:../codegen
