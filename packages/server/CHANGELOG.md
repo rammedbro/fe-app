@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://gitlab.com/imolater/fe-app/compare/@imolater/fe-app-server@0.2.1...@imolater/fe-app-server@0.3.0) (2024-04-23)
+
+
+### Features
+
+* **FA-7:** Add an application abstraction in fe-app-server ([10f944f](https://gitlab.com/imolater/fe-app/commit/10f944f3383b14e00656793fed6f7242a7846302))
+
+
+
+
+
 ## [0.2.1](https://gitlab.com/imolater/fe-app/compare/@imolater/fe-app-server@0.2.0...@imolater/fe-app-server@0.2.1) (2024-04-10)
 
 **Note:** Version bump only for package @imolater/fe-app-server

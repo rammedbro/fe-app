@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://gitlab.com/imolater/fe-app/compare/@imolater/fe-app-cli@0.1.2...@imolater/fe-app-cli@0.2.0) (2024-04-23)
+
+
+### Features
+
+* **FA-16:** Add fe-app-client in fe-app-cli deps ([cfc9389](https://gitlab.com/imolater/fe-app/commit/cfc9389b279292649246b103a1fb1ef31b426b16))
+
+
+
+
+
 ## [0.1.2](https://gitlab.com/imolater/fe-app/compare/@imolater/fe-app-cli@0.1.1...@imolater/fe-app-cli@0.1.2) (2024-04-10)
 
 **Note:** Version bump only for package @imolater/fe-app-cli

@@ -1,6 +1,6 @@
 {
   "name": "@imolater/fe-app-client",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Client logic for frontend applications",
   "repository": {
     "type": "git",
@@ -31,9 +31,9 @@
     "docs": "typedoc src/index.ts"
   },
   "dependencies": {
-    "@imolater/fe-app-config": "0.1.1",
-    "@imolater/fe-app-types": "0.3.0",
-    "@imolater/fe-app-workers": "0.2.0"
+    "@imolater/fe-app-config": "0.1.2",
+    "@imolater/fe-app-types": "0.3.1",
+    "@imolater/fe-app-workers": "0.2.1"
   },
   "devDependencies": {
     "@fe-app/eslint-config-base": "workspace:0.0.0",

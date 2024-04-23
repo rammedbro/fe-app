@@ -1,6 +1,6 @@
 {
   "name": "@imolater/fe-app-workers",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Web workers for frontend applications",
   "repository": {
     "type": "git",

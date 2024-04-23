@@ -1,6 +1,6 @@
 {
   "name": "@imolater/fe-app-server",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Server logic for frontend applications",
   "author": "imolater",
   "license": "ISC",
@@ -44,9 +44,9 @@
     "url": "https://gitlab.com/imolater/fe-app.git"
   },
   "dependencies": {
-    "@imolater/fe-app-build": "0.3.0",
-    "@imolater/fe-app-config": "0.1.1",
-    "@imolater/fe-app-types": "0.3.0",
+    "@imolater/fe-app-build": "0.3.1",
+    "@imolater/fe-app-config": "0.1.2",
+    "@imolater/fe-app-types": "0.3.1",
     "@sentry/cli": "^2.20.5",
     "commander": "^9.4.1",
     "consola": "^3.2.3",
