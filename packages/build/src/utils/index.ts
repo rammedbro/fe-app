@@ -4,6 +4,7 @@ import { deepmerge } from './merge';
 
 export { loadModule } from './module';
 export { deepmerge } from './merge';
+export { suppressViteLoggerWarn } from './vite';
 
 /**
  * Преобразование значений объекта с приведением к новому тип

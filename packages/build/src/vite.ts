@@ -1,16 +1,23 @@
 import path from 'node:path';
 import process from 'node:process';
-import { loadConfigFromFile, mergeConfig } from 'vite';
+import { loadConfigFromFile, mergeConfig, createLogger } from 'vite';
 import mime from 'mime-types';
 import lodashMerge from 'lodash.merge';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { installWorkers } from '@imolater/fe-app-workers/vite-plugin';
-import type { InlineConfig, LibraryOptions, PluginOption, UserConfig, BuildOptions } from 'vite';
+import type { InlineConfig, LibraryOptions, PluginOption, UserConfig, BuildOptions, Logger } from 'vite';
 import type { UnimportPluginOptions } from 'unimport/unplugin';
 import type { FEAppConfig, Configs } from '@imolater/fe-app-types';
-import { generateBuildMeta, generateManifest, insertConfig, insertFavicon, insertGlobalVariable } from '@/plugins';
-import { loadModule, mapObjectValues, deepmerge } from '@/utils';
+import {
+  generateBuildMeta,
+  generateManifest,
+  insertConfig,
+  insertFavicon,
+  insertGlobalVariable,
+  handlePublicDir,
+} from '@/plugins';
+import { loadModule, mapObjectValues } from '@/utils';
 import type { Config, ConfigJson } from '@imolater/fe-app-config';
 
 /** В каком режиме запущен vite - сборщик/сервер */
@@ -19,6 +26,7 @@ export type ViteMode = 'production' | 'development';
 /** Основной vite конфиг */
 export type ViteConfig = InlineConfig & {
   mode: ViteMode;
+  publicDir: string;
   build: {
     outDir: string;
     assetsDir: string;
@@ -34,6 +42,7 @@ export type ViteConfig = InlineConfig & {
   resolve: {
     alias: Record<string, string>;
   };
+  customLogger: Logger;
 };
 
 /** Интерфейс конфига сборки библиотек */
@@ -42,7 +51,6 @@ interface ViteLibConfig extends UserConfig {
 }
 
 interface ViteLibBuildOptions extends BuildOptions {
-  outDir: string;
   lib: LibraryOptions;
 }
 
@@ -62,6 +70,7 @@ export async function getViteConfig(
   const cwd = process.cwd();
   const isProduction = mode === 'production';
   const outDir = 'build';
+  const publicDir = 'public';
   const assetsDir = 'assets';
   const assetPath = (filename: string, type?: string) =>
     `${ assetsDir }/${ type || mime.lookup(path.extname(filename)) }/${ filename }`;
@@ -71,36 +80,37 @@ export async function getViteConfig(
     dedicatedWorker: assetPath('dedicated-worker.js'),
     serviceWorker: assetPath('service-worker.js'),
   };
-  const viteLibBuildOptions = {
-    outDir: cwd,
+  const viteLibBuildOptions: BuildOptions = {
+    outDir: outDir,
     emptyOutDir: false,
     sourcemap: false,
     manifest: false,
+    copyPublicDir: false,
   };
   let viteConfig: ViteConfig = {
     configFile: false,
     mode,
+    publicDir,
     build: {
       outDir,
       assetsDir,
       manifest: false,
       sourcemap: 'hidden',
-      copyPublicDir: true,
+      copyPublicDir: false,
+      emptyOutDir: false,
       rollupOptions: {
         output: {
           dir: outDir,
           assetFileNames: (assetInfo) => {
             if (!assetInfo.name) {
-              throw new Error(`Некорректное имя ассета: ${ assetInfo.source }`);
+              throw new Error(`Invalid asset name: ${ assetInfo.source }`);
             }
 
             const type = mime.lookup(assetInfo.name);
 
-            if (!type) {
-              return assetInfo.name;
-            }
-
-            return assetPath('[hash:12].[ext]', type);
+            return type
+              ? assetPath('[hash:12].[ext]', type)
+              : assetInfo.name;
           },
           entryFileNames: assetPath('[hash:12].js'),
           chunkFileNames: assetPath('[hash:12].js'),
@@ -118,24 +128,27 @@ export async function getViteConfig(
       middlewareMode: true,
     },
     plugins: [
+      handlePublicDir({ outDir, publicDir }),
       generateBuildMeta({ path: assets.buildMeta }),
       isProduction && generateManifest({ path: assets.manifest }),
     ],
     resolve: {
       alias: {},
     },
+    customLogger: createLogger(),
   };
 
   if (configs.feAppConfig) {
     if (isProduction) {
       viteConfig.build.libConfigs.push({
-        build: deepmerge({}, viteLibBuildOptions, {
+        build: {
+          ...viteLibBuildOptions,
           lib: {
             entry: configs.feAppConfig,
-            fileName: () => viteConfig.build.meta.configs.feAppConfig,
+            fileName: () => path.relative(outDir, viteConfig.build.meta.configs.feAppConfig!),
             formats: ['cjs'],
           } as LibraryOptions,
-        }),
+        },
       });
     }
 
@@ -208,13 +221,14 @@ export async function getViteConfig(
   if (configs.clientConfig) {
     if (isProduction) {
       viteConfig.build.libConfigs.push({
-        build: deepmerge({}, viteLibBuildOptions, {
+        build: {
+          ...viteLibBuildOptions,
           lib: {
             entry: configs.clientConfig,
-            fileName: () => viteConfig.build.meta.configs.clientConfig,
+            fileName: () => path.relative(outDir, viteConfig.build.meta.configs.clientConfig!),
             formats: ['cjs'],
           } as LibraryOptions,
-        }),
+        },
       });
     } else {
       const clientConfig = loadModule<(config: Config) => ConfigJson>(configs.clientConfig, { compile: true });
@@ -232,7 +246,7 @@ export async function getViteConfig(
     );
 
     if (configFromFile === null) {
-      throw new Error('Не удалось загрузить локальный конфиг');
+      throw new Error(`Could not load vite config file from ${ configs.viteConfig }`);
     }
 
     viteConfig = mergeConfig(configFromFile.config, viteConfig) as ViteConfig;
