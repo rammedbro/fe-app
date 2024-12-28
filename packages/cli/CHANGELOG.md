@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://gitlab.com/imolater/fe-app/compare/@imolater/fe-app-cli@0.2.0...@imolater/fe-app-cli@0.2.1) (2024-12-28)
+
+**Note:** Version bump only for package @imolater/fe-app-cli
+
+
+
+
+
 # [0.2.0](https://gitlab.com/imolater/fe-app/compare/@imolater/fe-app-cli@0.1.2...@imolater/fe-app-cli@0.2.0) (2024-04-23)
 
 
