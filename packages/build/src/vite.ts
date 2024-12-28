@@ -119,8 +119,8 @@ export async function getViteConfig(
       libConfigs: [],
       meta: {
         configs: {
-          feAppConfig: path.join(outDir, 'fe-app.config.js'),
-          clientConfig: path.join(outDir, 'client.config.js'),
+          feAppConfig: path.join(outDir, 'fe-app.config.cjs'),
+          clientConfig: path.join(outDir, 'client.config.cjs'),
         },
       },
     },
