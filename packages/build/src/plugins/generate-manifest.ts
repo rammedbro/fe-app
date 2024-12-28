@@ -14,7 +14,7 @@ export function generateManifest(options: {
       config.build!.manifest = options.path;
     },
     transformIndexHtml: {
-      transform(html) {
+      handler(html) {
         return {
           html,
           tags: [

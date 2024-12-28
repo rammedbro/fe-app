@@ -31,3 +31,6 @@ temp.*
 .gitlab-ci-local
 .yalc
 .pnpm-store
+
+# Misc
+.DS_Store

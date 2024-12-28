@@ -30,8 +30,11 @@ export async function start(): Promise<void> {
   const viteConfig = await getViteConfig(env, app.config);
   const { configs } = viteConfig.build.meta;
   const { outDir, assetsDir } = viteConfig.build;
+  const { publicDir } = viteConfig;
   const assetsPath = path.join(outDir, assetsDir);
   const assetsRoute = `/${ assetsDir }`;
+  const publicPath = path.join(outDir, publicDir);
+  const publicRoute = `/${ publicDir }`;
   let indexHtml = readFileSync(path.join(outDir, 'index.html'), 'utf-8');
 
   if (configs.feAppConfig) {
@@ -84,6 +87,10 @@ export async function start(): Promise<void> {
 
   // Middlewares
   app.use(assetsRoute, express.static(assetsPath, {
+    index: false,
+    fallthrough: false,
+  }));
+  app.use(publicRoute, express.static(publicPath, {
     index: false,
     fallthrough: false,
   }));

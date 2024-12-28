@@ -44,7 +44,7 @@ function createTempConfig(files: string[]): string {
   };
 
   const hash = crypto.randomBytes(5).toString('hex');
-  const filename = `temp.tsconfig.${ hash }.json`;
+  const filename = `tsconfig.${ hash }.json`;
 
   fs.writeFileSync(filename, JSON.stringify(TSConfig, null, 2));
 
