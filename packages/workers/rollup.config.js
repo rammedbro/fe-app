@@ -1,12 +1,11 @@
-import { URL } from 'node:url';
+import { cwd } from 'node:process';
 import { join } from 'node:path';
 import { getRollupConfig } from '@fe-app/rollup-config';
 
-const __dirname = new URL('.', import.meta.url).pathname;
 const __DEDICATED_WORKER_DIST_PATH__ = 'workers/dedicated-worker.js';
 const __SERVICE_WORKER_DIST_PATH__ = 'workers/service-worker.js';
 
-export default getRollupConfig(__dirname, [
+export default getRollupConfig(cwd(), [
   {
     input: 'src/index.ts',
     output: { file: 'dist/index.js' },

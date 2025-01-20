@@ -31,7 +31,6 @@ const config = {
       },
     ],
     'eqeqeq': ['error', 'always'],
-    'linebreak-style': ['error', 'unix'],
     'no-console': 'error',
     'no-new': 'error',
     'no-var': 'error',
